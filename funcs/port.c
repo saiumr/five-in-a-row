@@ -18,6 +18,9 @@ void portColor(SDL_Renderer* render, int n, int alpha) {
     case 4:
         SDL_SetRenderDrawColor(render, 231, 182, 145, alpha);  //theme1 color
         break;
+	case 5:
+		SDL_SetRenderDrawColor(render, 100, 100, 100, alpha);	//theme gray color
+		break;
     default:
         SDL_SetRenderDrawColor(render, 0, 0, 0, 255);  //black
         break;
@@ -63,8 +66,7 @@ void initPort(int theme) {
             SDL_RenderDrawLine(render, (drawCount + 1) * LINES_DISTANCE, LINES_DISTANCE, (drawCount + 1) * LINES_DISTANCE, d_xy);
         }
         portColor(render, 0, 255);
-    }
-    else {
+    }else if(theme == 1){
         portColor(render, 4, 255);
         SDL_RenderFillRect(render, &rect);
         portColor(render, 0, 255);
@@ -74,7 +76,17 @@ void initPort(int theme) {
             SDL_RenderDrawLine(render, LINES_DISTANCE, (drawCount + 1) * LINES_DISTANCE, d_xy, (drawCount + 1) * LINES_DISTANCE);
             SDL_RenderDrawLine(render, (drawCount + 1) * LINES_DISTANCE, LINES_DISTANCE, (drawCount + 1) * LINES_DISTANCE, d_xy);
         }
-    }
+	}else if(theme == 2){
+        portColor(render, 5, 255);
+        SDL_RenderFillRect(render, &rect);
+        portColor(render, 0, 255);
+        // SDL_RenderSetViewport(render, &rect);
+        // 两边空出一样的大小
+        for (drawCount = 0; drawCount < LINE_NUM; ++drawCount) {
+            SDL_RenderDrawLine(render, LINES_DISTANCE, (drawCount + 1) * LINES_DISTANCE, d_xy, (drawCount + 1) * LINES_DISTANCE);
+            SDL_RenderDrawLine(render, (drawCount + 1) * LINES_DISTANCE, LINES_DISTANCE, (drawCount + 1) * LINES_DISTANCE, d_xy);
+        }
+	}
 }
 
 SDL_Point getSubcript(int x, int y) {
