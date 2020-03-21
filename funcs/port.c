@@ -7,7 +7,7 @@ void portColor(SDL_Renderer* render, int n, int alpha) {
         SDL_SetRenderDrawColor(render, 0, 0, 0, alpha);  //black
         break;
     case 1:
-        SDL_SetRenderDrawColor(render, 255, 255, 255, alpha);  //black
+        SDL_SetRenderDrawColor(render, 255, 255, 255, alpha);  //white
         break;
     case 2:
         SDL_SetRenderDrawColor(render, 0, 255, 0, alpha);  //green
@@ -41,6 +41,8 @@ void initPositionTable() {
             portPositionCheckRect[drawCount][posCount].h = checkRectLength;
             portPositionCheckRect[drawCount][posCount].x = x - CHESSMAN_RADIUS;
             portPositionCheckRect[drawCount][posCount].y = y - CHESSMAN_RADIUS;
+
+            positionStatusTable[drawCount][posCount] = 1;
         }
     }
 }
@@ -52,7 +54,7 @@ void initPort(int theme) {
     int posCount;
     
     if (theme == 0) {
-        portColor(render, 0, 255);
+        portColor(render, 3, 255);
         SDL_RenderFillRect(render, &rect);
         portColor(render, 2, 255);
         // 两边空出一样的大小
@@ -92,17 +94,25 @@ SDL_Point getPortPoint(int sub_x, int sub_y) {
     return point;
 }
 
-void chessView(int x, int y) {
-    portColor(render, 0, 200);
-    drawCircle(render, x, y, CHESSMAN_RADIUS, 0);
-    portColor(render, 0, 255);
+void chessView(int x, int y, int kind, int flag) {
+    if (flag == 1) {
+        portColor(render, 1, 255);
+        drawCircle(render, x, y, CHESSMAN_RADIUS, kind);
+        portColor(render, 0, 255);    
+    }
+    else {
+        portColor(render, 0, 255);
+        drawCircle(render, x, y, CHESSMAN_RADIUS, kind);
+        portColor(render, 0, 255);
+    }
 }
 
-bool portCheckIn(int x, int y) {
-    bool success = true;
+SDL_Point portCheckIn(int x, int y, int flag) {
+    SDL_Point chessLocation;
     // 超出棋盘的范围
     if (x > WINDOW_HEIGHT) {
-        success = false;
+        chessLocation.x = -1;
+        chessLocation.y = -1;
     }
     else {
         SDL_Point point = {x, y};
@@ -117,15 +127,51 @@ bool portCheckIn(int x, int y) {
         // TODO: 给矩形增加是否被检测点在其中的标志，检测到置为0，未检测到置为1
         // TODO: 在场地位置表中增加是否有棋子在的标志，后期还要添加是黑棋子还是白棋子，0有1无，0黑1白
         // 自左上角开始顺时针检查点是否在矩形内
-        if(SDL_PointInRect(&point, &portPositionCheckRect[pos_x][pos_y])) 
-            chessView(getPortPoint(pos_x, pos_y).x, getPortPoint(pos_x, pos_y).y);
-        else if(SDL_PointInRect(&point, &portPositionCheckRect[sub_rx][pos_y]))
-            chessView(getPortPoint(sub_rx, pos_y).x, getPortPoint(sub_rx, pos_y).y);
-        else if(SDL_PointInRect(&point, &portPositionCheckRect[sub_rx][sub_by]))
-            chessView(getPortPoint(sub_rx, sub_by).x, getPortPoint(sub_rx, sub_by).y);
-        else if(SDL_PointInRect(&point, &portPositionCheckRect[pos_x][sub_by]))
-            chessView(getPortPoint(pos_x, sub_by).x, getPortPoint(pos_x, sub_by).y);
-        else success = false;
+        if(SDL_PointInRect(&point, &portPositionCheckRect[pos_x][pos_y])) {
+            chessView(getPortPoint(pos_x, pos_y).x, getPortPoint(pos_x, pos_y).y, 0, flag);
+            chessLocation.x = pos_x;
+            chessLocation.y = pos_y;
+        }
+        else if(SDL_PointInRect(&point, &portPositionCheckRect[sub_rx][pos_y])) {
+            chessView(getPortPoint(sub_rx, pos_y).x, getPortPoint(sub_rx, pos_y).y, 0, flag);
+            chessLocation.x = sub_rx;
+            chessLocation.y = pos_y;
+        }
+        else if(SDL_PointInRect(&point, &portPositionCheckRect[sub_rx][sub_by])) {
+            chessView(getPortPoint(sub_rx, sub_by).x, getPortPoint(sub_rx, sub_by).y, 0, flag);
+            chessLocation.x = sub_rx;
+            chessLocation.y = sub_by;
+        }
+        else if(SDL_PointInRect(&point, &portPositionCheckRect[pos_x][sub_by])) {
+            chessView(getPortPoint(pos_x, sub_by).x, getPortPoint(pos_x, sub_by).y, 0, flag);
+            chessLocation.x = pos_x;
+            chessLocation.y = sub_by;
+        }
+        else {
+            chessLocation.x = -1;
+            chessLocation.y = -1;
+        }
     }
-    return success;
+    return chessLocation;
+}
+
+
+void chessmanStatusChange(int sub_x, int sub_y, int chessmanCount, int flag) {
+    // 外部chessmanCount率先增加了1
+    // 把记录落点的表改成一维的了，好操作，nice啊
+    int sub_locatedChessman = chessmanCount - 1;
+
+    if (positionStatusTable[sub_x][sub_y] != 0) {
+        positionStatusTable[sub_x][sub_y] = 0;
+        chessmanStatus[sub_locatedChessman].x = portPosition[sub_x][sub_y].x;
+        chessmanStatus[sub_locatedChessman].y = portPosition[sub_x][sub_y].y;
+        chessmanStatus[sub_locatedChessman].flag = flag;
+    }
+}
+
+void chessmanLocationView(int chessmanCount) {
+    int sub_statusTable;
+    for (sub_statusTable = 0; sub_statusTable < chessmanCount; ++sub_statusTable) {
+        chessView(chessmanStatus[sub_statusTable].x, chessmanStatus[sub_statusTable].y, 1, chessmanStatus[sub_statusTable].flag);
+    } 
 }

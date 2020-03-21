@@ -9,6 +9,20 @@
 SDL_Point portPosition[LINE_NUM][LINE_NUM];
 
 /**
+ * \brief The position whether have been occupied 0 yes 1 no.
+ */
+int positionStatusTable[LINE_NUM][LINE_NUM];
+
+/**
+ * \brief The chessman status include pos x&y, and flag indicate black with 0 or white with 1. Init null.
+ */
+struct chessmanStatus {
+    int x;
+    int y;
+    int flag;
+}chessmanStatus[LINE_NUM * LINE_NUM];
+
+/**
  * \brief The range of every portPosition.
  */
 SDL_Rect portPositionCheckRect[LINE_NUM][LINE_NUM];
@@ -30,9 +44,10 @@ void initPort(int theme);
  * 
  * \param x The x coordinate of point.
  * \param y The y coordinate of point.
- * \return true if point in range or not.
+ * \param falg The color of chessman view.
+ * \return chessman location if point in range.
  */
-bool portCheckIn(int x, int y);
+SDL_Point portCheckIn(int x, int y, int flag);
 
 /**
  * \brief Get a position of chessman.
@@ -46,8 +61,10 @@ SDL_Point getPortPoint(int sub_x, int sub_y);
  * \brief Preview where chess will location.
  * \param x The x coordinate of circle center.
  * \param y The y coordinate of circle center.
+ * \param kind 1 Filled or 0 not.
+ * \param flag 0 black or 1 white.
  */
-void chessView(int x, int y);
+void chessView(int x, int y, int kind, int flag);
 
 /**
  * 
@@ -65,3 +82,18 @@ void portColor(SDL_Renderer* render, int n, int alpha);
  * \return SDL_Point A point.
  */
 SDL_Point getSubcript(int x, int y);
+
+/**
+ * \brief Change status of position and chessmanlocationtable.
+ * \param sub_x The x subcript of table.
+ * \param sub_y The y subcript of table.
+ * \param chessmanCount All chessman's number.
+ * \param flag The kind of chessman 0 black 1 white.
+ */
+void chessmanStatusChange(int sub_x, int sub_y, int chessmanCount, int flag);
+
+/**
+ * \brief Draw chessman that have located.
+ * \param chessmanCount All chessman's number.
+ */
+void chessmanLocationView(int chessmanCount);
