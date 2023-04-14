@@ -1,5 +1,8 @@
 #include "init.h"
 
+SDL_Window* window = NULL;
+SDL_Renderer* render = NULL;
+
 bool init() {
     bool success = true;
 

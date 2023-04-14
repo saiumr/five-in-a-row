@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include "funcs/init.h"
-#include "funcs/DrawCircle.h"
-#include "funcs/port.h"
+#include "init.h"
+#include "DrawCircle.h"
+#include "port.h"
 
-int main(int argc, const char** argv) {
+int main(int argc, char* argv[]) {
 
     if (!init()) {
         printf("SYSTEM INIT FAILED!\n");

@@ -1,6 +1,11 @@
 #include "port.h"
 #include "DrawCircle.h"
 
+SDL_Point portPosition[LINE_NUM][LINE_NUM];
+int positionStatusTable[LINE_NUM][LINE_NUM];
+struct chessmanStatus chessmanStatus[LINE_NUM * LINE_NUM];
+SDL_Rect portPositionCheckRect[LINE_NUM][LINE_NUM];
+
 void portColor(SDL_Renderer* render, int n, int alpha) {
     switch (n) {
     case 0:

@@ -5,8 +5,8 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-SDL_Window* window;
-SDL_Renderer* render;
+extern SDL_Window* window;
+extern SDL_Renderer* render;
 
 bool init();
 #endif

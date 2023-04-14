@@ -3,29 +3,32 @@
 #define CHESSMAN_RADIUS 15
 #define LINE_NUM 15
 
-/**
- * \brief All possible location of chessman.
- */
-SDL_Point portPosition[LINE_NUM][LINE_NUM];
-
-/**
- * \brief The position whether have been occupied 0 yes 1 no.
- */
-int positionStatusTable[LINE_NUM][LINE_NUM];
-
-/**
- * \brief The chessman status include pos x&y, and flag indicate black with 0 or white with 1. Init null.
- */
 struct chessmanStatus {
     int x;
     int y;
     int flag;
-}chessmanStatus[LINE_NUM * LINE_NUM];
+};
+
+/**
+ * \brief All possible location of chessman.
+ */
+extern SDL_Point portPosition[LINE_NUM][LINE_NUM];
+
+/**
+ * \brief The position whether have been occupied 0 yes 1 no.
+ */
+extern int positionStatusTable[LINE_NUM][LINE_NUM];
+
+/**
+ * \brief The chessman status include pos x&y, and flag indicate black with 0 or white with 1. Init null.
+ */
+extern struct chessmanStatus chessmanStatus[LINE_NUM * LINE_NUM];
+
 
 /**
  * \brief The range of every portPosition.
  */
-SDL_Rect portPositionCheckRect[LINE_NUM][LINE_NUM];
+extern SDL_Rect portPositionCheckRect[LINE_NUM][LINE_NUM];
 
 /**
  * 
