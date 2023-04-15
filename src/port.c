@@ -82,7 +82,7 @@ void initPort(int theme) {
     }
 }
 
-SDL_Point getSubcript(int x, int y) {
+SDL_Point getSubscript(int x, int y) {
     SDL_Point point;
 
     // mark : nnmmb! 纵向相除得到行数  横向相除得到列数
@@ -121,7 +121,7 @@ SDL_Point portCheckIn(int x, int y, int flag) {
     }
     else {
         SDL_Point point = {x, y};
-        SDL_Point point_sub = getSubcript(x, y);
+        SDL_Point point_sub = getSubscript(x, y);
 
         int pos_x = point_sub.x;
         int pos_y = point_sub.y;

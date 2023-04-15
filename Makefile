@@ -24,7 +24,7 @@ CFLAGS      = -Wall
 
 OBJS_DIR    = objs
 # add object files
-OBJS        = init.o port.o DrawCircle.o
+OBJS        = main.o init.o port.o DrawCircle.o
 OUT_OBJS    = $(addprefix $(OBJS_DIR)/, $(OBJS))
 
 
@@ -32,7 +32,7 @@ OUT_OBJS    = $(addprefix $(OBJS_DIR)/, $(OBJS))
 all:$(TARGET)
 
 $(TARGET):$(OUT_OBJS)
-	$(CC) -o $(TARGET) main.c $(OUT_OBJS) $(CFLAGS) $(INCLUDES) $(LIB)
+	$(CC) -o $(TARGET) $(OUT_OBJS) $(CFLAGS) $(INCLUDES) $(LIB)
 
 # `|` represent "order-only prerequisite" -> $(OBJS_DIR)
 $(OBJS_DIR)/%.o:$(SRC)/%.c | $(OBJS_DIR)

@@ -1,5 +1,6 @@
-#ifndef _INIT_H
-#define _INIT_H
+#ifndef _INIT_H_
+#define _INIT_H_
+
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #define WINDOW_WIDTH 800

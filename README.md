@@ -4,7 +4,7 @@
 
 ## 使用SDL2  
 
-编译工程需要安装SDL2库  
+编译工程需要安装SDL2库，windows需要更改一下[Makefile](./Makefile)里面SDL_DIR的路径  
 
 ## 状况  
 

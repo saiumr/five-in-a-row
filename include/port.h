@@ -1,3 +1,6 @@
+#ifndef _PORT_H_
+#define _PORT_H_
+
 #include "init.h"
 #define LINES_DISTANCE 38
 #define CHESSMAN_RADIUS 15
@@ -47,7 +50,7 @@ void initPort(int theme);
  * 
  * \param x The x coordinate of point.
  * \param y The y coordinate of point.
- * \param falg The color of chessman view.
+ * \param flag The color of chessman view.
  * \return chessman location if point in range.
  */
 SDL_Point portCheckIn(int x, int y, int flag);
@@ -73,7 +76,7 @@ void chessView(int x, int y, int kind, int flag);
  * 
  * \brief Change render drawColor.
  * \param render The renderer.
- * \param n The diffrent color. 0 balck  1 white 2 green  3 theme0 color  4 theme1 color
+ * \param n The different color. 0 black  1 white 2 green  3 theme0 color  4 theme1 color
  * \param alpha Alpha should be between 0-255.
  */
 void portColor(SDL_Renderer* render, int n, int alpha);
@@ -84,12 +87,12 @@ void portColor(SDL_Renderer* render, int n, int alpha);
  * \param y The mouse y coordinate.
  * \return SDL_Point A point.
  */
-SDL_Point getSubcript(int x, int y);
+SDL_Point getSubscript(int x, int y);
 
 /**
- * \brief Change status of position and chessmanlocationtable.
- * \param sub_x The x subcript of table.
- * \param sub_y The y subcript of table.
+ * \brief Change status of position and chessman location table.
+ * \param sub_x The x subscript of table.
+ * \param sub_y The y subscript of table.
  * \param chessmanCount All chessman's number.
  * \param flag The kind of chessman 0 black 1 white.
  */
@@ -100,3 +103,5 @@ void chessmanStatusChange(int sub_x, int sub_y, int chessmanCount, int flag);
  * \param chessmanCount All chessman's number.
  */
 void chessmanLocationView(int chessmanCount);
+
+#endif
