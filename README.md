@@ -29,6 +29,7 @@ $./run.sh
 ![five-in-a-row1](https://github.com/saiumr/saiumrImages/blob/master/five-in-a-row1.gif 'theme0')
 
 你可以更改main.c中initPort()函数唯一参数初始化棋盘不同的主题 (鼓励修改和添加主题)：  
+（这只是开发中这样修改，后面计划弄成gui列表那样）  
 ![five-in-a-row2](https://github.com/saiumr/saiumrImages/blob/master/five-in-a-row2.gif 'theme1')
 
 ## 其他的话  

@@ -24,7 +24,7 @@ CFLAGS      = -Wall
 
 OBJS_DIR    = objs
 # add object files
-OBJS        = main.o init.o port.o DrawCircle.o
+OBJS        = main.o init.o port.o DrawCircle.o event.o
 OUT_OBJS    = $(addprefix $(OBJS_DIR)/, $(OBJS))
 
 
