@@ -6,10 +6,15 @@
 #define CHESSMAN_RADIUS (LINES_DISTANCE/2 - 4)
 #define LINE_NUM 15
 
+typedef enum {
+    PLAYER_BLACK = 0,
+    PLAYER_WHITE
+} Player;
+
 typedef struct {
     int x;
     int y;
-    int flag;
+    Player player;
 } Chessman_Status;
 
 typedef enum {
@@ -67,7 +72,7 @@ void drawPort(Port_Theme theme);
  * \param flag The color of chessman view.
  * \return chessman location if point in range.
  */
-SDL_Point portCheckIn(int x, int y, int flag);
+SDL_Point portCheckIn(int x, int y, Player player);
 
 /**
  * \brief Change status of position and chessman location table.
@@ -76,7 +81,7 @@ SDL_Point portCheckIn(int x, int y, int flag);
  * \param chessmanCount All chessman's number.
  * \param flag The kind of chessman 0 black 1 white.
  */
-void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, int flag);
+void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, Player player);
 
 /**
  * \brief Draw chessman that have located.

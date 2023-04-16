@@ -28,9 +28,9 @@ SDL_Point getPortPoint(int sub_x, int sub_y);
  * \param x The x coordinate of circle center.
  * \param y The y coordinate of circle center.
  * \param kind 1 Filled or 0 not.
- * \param flag 0 black or 1 white.
+ * \param player PLAYER_BLACK and PLAYER_WHITE
  */
-void chessView(int x, int y, int kind, int flag);
+void chessView(int x, int y, int kind, int player);
 
 /**
  * 
@@ -145,8 +145,8 @@ SDL_Point getPortPoint(int sub_x, int sub_y) {
     return point;
 }
 
-void chessView(int x, int y, int kind, int flag) {
-    if (flag == 1) {
+void chessView(int x, int y, int kind, int player) {
+    if (player == PLAYER_WHITE) {
         portColor(render, PORT_COLOR_WHITE, 255);
         drawCircle(render, x, y, CHESSMAN_RADIUS, kind);
         portColor(render, PORT_COLOR_BLACK, 255);    
@@ -158,7 +158,7 @@ void chessView(int x, int y, int kind, int flag) {
     }
 }
 
-SDL_Point portCheckIn(int x, int y, int flag) {
+SDL_Point portCheckIn(int x, int y, Player player) {
     SDL_Point chessLocation;
     // 超出棋盘的范围
     if (x > WINDOW_HEIGHT) {
@@ -179,22 +179,22 @@ SDL_Point portCheckIn(int x, int y, int flag) {
         // TODO: 在场地位置表中增加是否有棋子在的标志，后期还要添加是黑棋子还是白棋子，0有1无，0黑1白
         // 自左上角开始顺时针检查点是否在矩形内
         if(SDL_PointInRect(&point, &portPositionTableCheckRect[pos_x][pos_y])) {
-            chessView(getPortPoint(pos_x, pos_y).x, getPortPoint(pos_x, pos_y).y, 0, flag);
+            chessView(getPortPoint(pos_x, pos_y).x, getPortPoint(pos_x, pos_y).y, 0, player);
             chessLocation.x = pos_x;
             chessLocation.y = pos_y;
         }
         else if(SDL_PointInRect(&point, &portPositionTableCheckRect[sub_rx][pos_y])) {
-            chessView(getPortPoint(sub_rx, pos_y).x, getPortPoint(sub_rx, pos_y).y, 0, flag);
+            chessView(getPortPoint(sub_rx, pos_y).x, getPortPoint(sub_rx, pos_y).y, 0, player);
             chessLocation.x = sub_rx;
             chessLocation.y = pos_y;
         }
         else if(SDL_PointInRect(&point, &portPositionTableCheckRect[sub_rx][sub_by])) {
-            chessView(getPortPoint(sub_rx, sub_by).x, getPortPoint(sub_rx, sub_by).y, 0, flag);
+            chessView(getPortPoint(sub_rx, sub_by).x, getPortPoint(sub_rx, sub_by).y, 0, player);
             chessLocation.x = sub_rx;
             chessLocation.y = sub_by;
         }
         else if(SDL_PointInRect(&point, &portPositionTableCheckRect[pos_x][sub_by])) {
-            chessView(getPortPoint(pos_x, sub_by).x, getPortPoint(pos_x, sub_by).y, 0, flag);
+            chessView(getPortPoint(pos_x, sub_by).x, getPortPoint(pos_x, sub_by).y, 0, player);
             chessLocation.x = pos_x;
             chessLocation.y = sub_by;
         }
@@ -206,23 +206,21 @@ SDL_Point portCheckIn(int x, int y, int flag) {
     return chessLocation;
 }
 
-
-void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, int flag) {
-    // 外部chessmanCount率先增加了1
-    // 把记录落点的表改成一维的了
+void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, Player player) {
+    // chessmanStatusTable's index of current chess piece is sub_locatedChessman
     int sub_locatedChessman = chessmanCount - 1;
 
-    if (positionStatusTable[sub_x][sub_y] != 0) {
-        positionStatusTable[sub_x][sub_y] = 0;
+    if (positionStatusTable[sub_x][sub_y] != 0) {  // there is no chess piece here
+        positionStatusTable[sub_x][sub_y] = 0;     // there is a chess piece here now
         chessmanStatusTable[sub_locatedChessman].x = portPositionTable[sub_x][sub_y].x;
         chessmanStatusTable[sub_locatedChessman].y = portPositionTable[sub_x][sub_y].y;
-        chessmanStatusTable[sub_locatedChessman].flag = flag;
+        chessmanStatusTable[sub_locatedChessman].player = player;
     }
 }
 
 void chessmanLocationView(int chessmanCount) {
     int sub_statusTable;
     for (sub_statusTable = 0; sub_statusTable < chessmanCount; ++sub_statusTable) {
-        chessView(chessmanStatusTable[sub_statusTable].x, chessmanStatusTable[sub_statusTable].y, 1, chessmanStatusTable[sub_statusTable].flag);
-    } 
+        chessView(chessmanStatusTable[sub_statusTable].x, chessmanStatusTable[sub_statusTable].y, 1, chessmanStatusTable[sub_statusTable].player);
+    }
 }
