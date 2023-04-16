@@ -8,7 +8,7 @@
 
 ## 状况  
 
-测试版 && 游戏逻辑正在计划开工 && ~~针对windows门派~~已加入Makefile在windows下编译  
+测试版 && 游戏逻辑正在计划开工 && ~~针对windows门派~~使用`make`全平台编译（大概）  
 
 ## 编译  
 
@@ -18,12 +18,6 @@ make clean
 ```  
 
 生成可执行文件`fiar.exe`（**f**ive **i**n **a** **r**ow）
-
-## 非windows也可以这样运行(Ubuntu MacOS Linux)  
-
-```bash  
-$./run.sh
-```  
 
 效果如图所示：  
 ![five-in-a-row1](https://github.com/saiumr/saiumrImages/blob/master/five-in-a-row1.gif 'theme0')
