@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "init.h"
 #include "event.h"
 

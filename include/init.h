@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <stdio.h>
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
