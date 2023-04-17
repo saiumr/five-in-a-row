@@ -1,6 +1,6 @@
 #include "event.h"
 
-int flag = 1;
+Player player = 1;
 int chessmanCount = 0;
 SDL_Point chessmanPosition;
 SDL_Event event;
@@ -18,13 +18,13 @@ void eventHandle(SDL_Event event) {
             mouse_y = event.motion.y;
         }
         if (event.type == SDL_MOUSEBUTTONDOWN) {
-            chessmanPosition = portCheckIn(mouse_x, mouse_y, flag);
+            chessmanPosition = portCheckIn(mouse_x, mouse_y, player);
             if (chessmanPosition.x == -1 || chessmanPosition.y == -1) continue;  // outside range
-            if (positionStatusTable[chessmanPosition.x][chessmanPosition.y] == 0) continue;  // have been recorded
+            if (positionStatusTable[chessmanPosition.x][chessmanPosition.y] == PORT_LOCATION_OCCUPIED) continue;  // have been recorded
             ++chessmanCount;
-            chessmanStatusTableChange(chessmanPosition.x, chessmanPosition.y, chessmanCount, flag);
-            if (flag == 1) flag = 0;
-            else flag = 1;
+            chessmanStatusTableChange(chessmanPosition.x, chessmanPosition.y, chessmanCount, player);
+            if (player == PLAYER_WHITE) player = PLAYER_BLACK;
+            else player = PLAYER_WHITE;
         }
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
@@ -32,6 +32,6 @@ void eventHandle(SDL_Event event) {
             }
         }
     }
-    portCheckIn(mouse_x, mouse_y, flag);
+    portCheckIn(mouse_x, mouse_y, player);
     if (chessmanCount > 0 ) chessmanLocationView(chessmanCount);
 }

@@ -2,7 +2,7 @@
 #include "DrawCircle.h"
 
 SDL_Point portPositionTable[LINE_NUM][LINE_NUM];
-int positionStatusTable[LINE_NUM][LINE_NUM];
+Port_Location positionStatusTable[LINE_NUM][LINE_NUM];
 Chessman_Status chessmanStatusTable[LINE_NUM * LINE_NUM];
 SDL_Rect portPositionTableCheckRect[LINE_NUM][LINE_NUM];
 
@@ -83,7 +83,7 @@ void initPositionTable() {
             portPositionTableCheckRect[drawCount][posCount].x = x - CHESSMAN_RADIUS;
             portPositionTableCheckRect[drawCount][posCount].y = y - CHESSMAN_RADIUS;
 
-            positionStatusTable[drawCount][posCount] = 1;
+            positionStatusTable[drawCount][posCount] = PORT_LOCATION_EMPTY;
         }
     }
 }
@@ -210,8 +210,8 @@ void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, Player p
     // chessmanStatusTable's index of current chess piece is sub_locatedChessman
     int sub_locatedChessman = chessmanCount - 1;
 
-    if (positionStatusTable[sub_x][sub_y] != 0) {  // there is no chess piece here
-        positionStatusTable[sub_x][sub_y] = 0;     // there is a chess piece here now
+    if (positionStatusTable[sub_x][sub_y] == PORT_LOCATION_EMPTY) {  // there is no chess piece here
+        positionStatusTable[sub_x][sub_y] = PORT_LOCATION_OCCUPIED;     // there is a chess piece here now
         chessmanStatusTable[sub_locatedChessman].x = portPositionTable[sub_x][sub_y].x;
         chessmanStatusTable[sub_locatedChessman].y = portPositionTable[sub_x][sub_y].y;
         chessmanStatusTable[sub_locatedChessman].player = player;

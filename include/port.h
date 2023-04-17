@@ -7,6 +7,11 @@
 #define LINE_NUM 15
 
 typedef enum {
+    PORT_LOCATION_OCCUPIED = 0,
+    PORT_LOCATION_EMPTY
+} Port_Location;
+
+typedef enum {
     PLAYER_BLACK = 0,
     PLAYER_WHITE
 } Player;
@@ -39,7 +44,7 @@ extern SDL_Point portPositionTable[LINE_NUM][LINE_NUM];
 /**
  * \brief The position whether have been occupied 0 yes 1 no.
  */
-extern int positionStatusTable[LINE_NUM][LINE_NUM];
+extern Port_Location positionStatusTable[LINE_NUM][LINE_NUM];
 
 /**
  * \brief The chessman status include pos x&y, and flag indicate black with 0 or white with 1. Init null.
