@@ -96,7 +96,7 @@ void chessmanStatusTableChange(int sub_x, int sub_y, Player player);
  * \brief Draw chessman that have located.
  * \param chessmanCount All chessman's number.
  */
-void chessmanLocationView(int chessmanCount);
+void chessmanLocationView();
 
 /**
  * \brief Check if any players have won.

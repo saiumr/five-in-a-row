@@ -43,5 +43,5 @@ void eventHandle(SDL_Event event) {
         }
     }
     portCheckIn(mouse_x, mouse_y, player);
-    if (chessmanCount > 0 ) chessmanLocationView(chessmanCount);
+    if (chessmanCount > 0 ) chessmanLocationView();
 }

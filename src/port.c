@@ -218,10 +218,11 @@ void chessmanStatusTableChange(int sub_x, int sub_y, Player player) {
     }
 }
 
-void chessmanLocationView(int chessmanCount) {
+void chessmanLocationView() {
     int sub_statusTable;
     for (size_t row = 0; row < LINE_NUM; ++row) {
         for (size_t column = 0; column < LINE_NUM; ++column) {
+            if (chessmanStatusTable[row * LINE_NUM + column].player == PLAYER_ABSENT) continue;
             chessView(chessmanStatusTable[row * LINE_NUM + column].x, chessmanStatusTable[row * LINE_NUM + column].y, 1, chessmanStatusTable[row * LINE_NUM + column].player);
         }
     }
