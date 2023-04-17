@@ -1,6 +1,6 @@
 #include "event.h"
 
-Player player = 1;
+Player player = PLAYER_BLACK;
 int chessmanCount = 0;
 SDL_Point chessmanPosition;
 SDL_Event event;
@@ -23,8 +23,7 @@ void eventHandle(SDL_Event event) {
             if (positionStatusTable[chessmanPosition.x][chessmanPosition.y] == PORT_LOCATION_OCCUPIED) continue;  // have been recorded
             ++chessmanCount;
             chessmanStatusTableChange(chessmanPosition.x, chessmanPosition.y, chessmanCount, player);
-            if (player == PLAYER_WHITE) player = PLAYER_BLACK;
-            else player = PLAYER_WHITE;
+            player = player == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE;
         }
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
