@@ -5,7 +5,7 @@ SDL_Point portPositionTable[LINE_NUM][LINE_NUM];
 Port_Location positionStatusTable[LINE_NUM][LINE_NUM];
 Chessman_Status chessmanStatusTable[LINE_NUM * LINE_NUM];
 SDL_Rect portPositionTableCheckRect[LINE_NUM][LINE_NUM];
-
+char player_name[2][16] = {"BLACK", "WHITE"};
 
 /**
  * \brief Get point or rect table subscript.
@@ -84,8 +84,10 @@ void initPositionTable() {
             portPositionTableCheckRect[drawCount][posCount].y = y - CHESSMAN_RADIUS;
 
             positionStatusTable[drawCount][posCount] = PORT_LOCATION_EMPTY;
+            chessmanStatusTable[drawCount * LINE_NUM + posCount].player = PLAYER_ABSENT;
         }
     }
+
 }
 
 void drawPort(Port_Theme theme) {
@@ -95,7 +97,7 @@ void drawPort(Port_Theme theme) {
     int posCount;
     
     if (theme == PORT_THEME0) {
-        portColor(render, PORT_COLOR_LIGHT, 255);
+        portColor(render, PORT_COLOR_DARK, 255);
         SDL_RenderFillRect(render, &rect);
         portColor(render, PORT_COLOR_GREEN, 255);
         // Leave the same size on both sides of the port(chessboard)
@@ -151,7 +153,7 @@ void chessView(int x, int y, int kind, int player) {
         drawCircle(render, x, y, CHESSMAN_RADIUS, kind);
         portColor(render, PORT_COLOR_BLACK, 255);    
     }
-    else {
+    else if (player == PLAYER_BLACK) {
         portColor(render, PORT_COLOR_BLACK, 255);
         drawCircle(render, x, y, CHESSMAN_RADIUS, kind);
         portColor(render, PORT_COLOR_BLACK, 255);
@@ -160,8 +162,9 @@ void chessView(int x, int y, int kind, int player) {
 
 SDL_Point portCheckIn(int x, int y, Player player) {
     SDL_Point chessLocation;
-    // 超出棋盘的范围
-    if (x > WINDOW_HEIGHT) {
+    // outrange of the port
+    if ( (x < LINES_DISTANCE - CHESSMAN_RADIUS) || (x > LINE_NUM * LINES_DISTANCE + CHESSMAN_RADIUS) ||
+         (y < LINES_DISTANCE - CHESSMAN_RADIUS) || (y > LINE_NUM * LINES_DISTANCE + CHESSMAN_RADIUS)) {
         chessLocation.x = -1;
         chessLocation.y = -1;
     }
@@ -175,9 +178,6 @@ SDL_Point portCheckIn(int x, int y, Player player) {
         int sub_rx = pos_x + 1;
         int sub_by = pos_y + 1;
 
-        // TODO: 给矩形增加是否被检测点在其中的标志，检测到置为0，未检测到置为1
-        // TODO: 在场地位置表中增加是否有棋子在的标志，后期还要添加是黑棋子还是白棋子，0有1无，0黑1白
-        // 自左上角开始顺时针检查点是否在矩形内
         if(SDL_PointInRect(&point, &portPositionTableCheckRect[pos_x][pos_y])) {
             chessView(getPortPoint(pos_x, pos_y).x, getPortPoint(pos_x, pos_y).y, 0, player);
             chessLocation.x = pos_x;
@@ -206,9 +206,9 @@ SDL_Point portCheckIn(int x, int y, Player player) {
     return chessLocation;
 }
 
-void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, Player player) {
+void chessmanStatusTableChange(int sub_x, int sub_y, Player player) {
     // chessmanStatusTable's index of current chess piece is sub_locatedChessman
-    int sub_locatedChessman = chessmanCount - 1;
+    int sub_locatedChessman = sub_x * LINE_NUM + sub_y;
 
     if (positionStatusTable[sub_x][sub_y] == PORT_LOCATION_EMPTY) {  // there is no chess piece here
         positionStatusTable[sub_x][sub_y] = PORT_LOCATION_OCCUPIED;     // there is a chess piece here now
@@ -220,7 +220,48 @@ void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, Player p
 
 void chessmanLocationView(int chessmanCount) {
     int sub_statusTable;
-    for (sub_statusTable = 0; sub_statusTable < chessmanCount; ++sub_statusTable) {
-        chessView(chessmanStatusTable[sub_statusTable].x, chessmanStatusTable[sub_statusTable].y, 1, chessmanStatusTable[sub_statusTable].player);
+    for (size_t row = 0; row < LINE_NUM; ++row) {
+        for (size_t column = 0; column < LINE_NUM; ++column) {
+            chessView(chessmanStatusTable[row * LINE_NUM + column].x, chessmanStatusTable[row * LINE_NUM + column].y, 1, chessmanStatusTable[row * LINE_NUM + column].player);
+        }
     }
+}
+
+bool checkWon(Player player) {
+    for (size_t row = 0; row < LINE_NUM; ++row) {
+        for (size_t column = 0; column < LINE_NUM; ++column) {
+            
+            if (positionStatusTable[row][column] == PORT_LOCATION_OCCUPIED && \
+                chessmanStatusTable[row * LINE_NUM + column].player == player) {    
+                // check '-'
+                if ((column < 11 && \
+                    (chessmanStatusTable[row * LINE_NUM + column + 1].player == player) && \
+                    (chessmanStatusTable[row * LINE_NUM + column + 2].player == player) && \
+                    (chessmanStatusTable[row * LINE_NUM + column + 3].player == player) && \
+                    (chessmanStatusTable[row * LINE_NUM + column + 4].player == player)) || \
+                    // check '|'
+                    (row < 11 && \
+                    (chessmanStatusTable[(row + 1) * LINE_NUM + column].player == player) && \
+                    (chessmanStatusTable[(row + 2) * LINE_NUM + column].player == player) && \
+                    (chessmanStatusTable[(row + 3) * LINE_NUM + column].player == player) && \
+                    (chessmanStatusTable[(row + 4) * LINE_NUM + column].player == player)) || \
+                    // check '\'
+                    ((row < 11 && column < 11) && \
+                    (chessmanStatusTable[(row + 1) * LINE_NUM + column + 1].player == player) && \
+                    (chessmanStatusTable[(row + 2) * LINE_NUM + column + 2].player == player) && \
+                    (chessmanStatusTable[(row + 3) * LINE_NUM + column + 3].player == player) && \
+                    (chessmanStatusTable[(row + 4) * LINE_NUM + column + 4].player == player)) || \
+                    // check '/'
+                    ((row < 11 && column > 3) && \
+                    (chessmanStatusTable[(row + 1) * LINE_NUM + column - 1].player == player) && \
+                    (chessmanStatusTable[(row + 2) * LINE_NUM + column - 2].player == player) && \
+                    (chessmanStatusTable[(row + 3) * LINE_NUM + column - 3].player == player) && \
+                    (chessmanStatusTable[(row + 4) * LINE_NUM + column - 4].player == player))) {
+                        return true;
+                }
+            }
+        }
+    }
+    
+    return false;
 }

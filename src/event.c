@@ -22,8 +22,19 @@ void eventHandle(SDL_Event event) {
             if (chessmanPosition.x == -1 || chessmanPosition.y == -1) continue;  // outside range
             if (positionStatusTable[chessmanPosition.x][chessmanPosition.y] == PORT_LOCATION_OCCUPIED) continue;  // have been recorded
             ++chessmanCount;
-            chessmanStatusTableChange(chessmanPosition.x, chessmanPosition.y, chessmanCount, player);
-            player = player == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE;
+            chessmanStatusTableChange(chessmanPosition.x, chessmanPosition.y, player);
+
+            if (checkWon(player)) {
+                printf("Winner is player \"%s\"!\n", player_name[player]);
+                quit = true;
+            }
+            else if (chessmanCount == LINE_NUM * LINE_NUM) {
+                printf("No Winner!\n");
+                quit = true;
+            }
+            else {
+                player = player == PLAYER_WHITE ? PLAYER_BLACK : PLAYER_WHITE;
+            }
         }
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {

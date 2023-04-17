@@ -2,6 +2,7 @@
 #define _PORT_H_
 
 #include "init.h"
+#include <string.h>
 #define LINES_DISTANCE 38
 #define CHESSMAN_RADIUS (LINES_DISTANCE/2 - 4)
 #define LINE_NUM 15
@@ -13,8 +14,11 @@ typedef enum {
 
 typedef enum {
     PLAYER_BLACK = 0,
-    PLAYER_WHITE
+    PLAYER_WHITE,
+    PLAYER_ABSENT  // no player won
 } Player;
+
+extern char player_name[2][16]; // the name should be defined by user.
 
 typedef struct {
     int x;
@@ -86,12 +90,17 @@ SDL_Point portCheckIn(int x, int y, Player player);
  * \param chessmanCount All chessman's number.
  * \param flag The kind of chessman 0 black 1 white.
  */
-void chessmanStatusTableChange(int sub_x, int sub_y, int chessmanCount, Player player);
+void chessmanStatusTableChange(int sub_x, int sub_y, Player player);
 
 /**
  * \brief Draw chessman that have located.
  * \param chessmanCount All chessman's number.
  */
 void chessmanLocationView(int chessmanCount);
+
+/**
+ * \brief Check if any players have won.
+ */
+bool checkWon(Player player);
 
 #endif
