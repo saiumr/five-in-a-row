@@ -2,6 +2,7 @@
 #define _PORT_H_
 
 #include "init.h"
+#include "DrawCircle.h"
 #include <string.h>
 #define LINES_DISTANCE 38
 #define CHESSMAN_RADIUS (LINES_DISTANCE/2 - 4)
